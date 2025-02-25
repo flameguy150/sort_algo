@@ -2,6 +2,7 @@
 import pygame
 from pygame import mixer
 import os
+import copy
 
 """
 Solar System Shit
@@ -28,7 +29,7 @@ mixer.music.load(song)
 mixer.music.set_volume(0.7) 
 mixer.music.play(-1, 1.0) 
 
-background_colour = (234, 212, 252) 
+background_colour = (0,0,0) 
 rectangle_color = (255,0,0) # red baby
   
 screen = pygame.display.set_mode((800, 400)) 
@@ -70,6 +71,18 @@ class RectList:
                 return index
             index += 1;
 
+    def insert(self, index):
+        pass
+
+    def __getitem__(self, index):
+        return self.list[index]  # Allow indexing like a regular list
+
+    def __setitem__(self, index, value):
+        self.list[index] = value  # Allow setting items at an index
+
+    def __repr__(self):
+        return f"RectList({self.list})"
+
         
 
 def draw_rectangles(number): 
@@ -82,15 +95,15 @@ def draw_rectangles(number):
         top = screen.get_height()-(dividerh*(i / divider))
         width = screen.get_width()/number
         height = screen.get_height()-top
-        if i == 0: #first block
-            top -= 5
+        # if i == 0: #first block
+        #     top -= 5
     
-        rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-1, top - 1, width + 1, height+2))
+        # rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
         rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width, height))
 
         block = Rect(left, top, width, height)
         block.rect = rect
-        block.outline = rect_outline
+        # block.outline = rect_outline
 
         rectlist.append(block)
 
@@ -102,25 +115,50 @@ def drawRect(rect):
     top = rect.top
     width = rect.width  
     height = rect.height
-    rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-1, top - 1, width + 1, height+2))
+    # rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
     rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width, height))
 
+    block = Rect(left, top, width, height)
+    block.rect = rect
+    # block.outline = rect_outline
+
+    rectlist.append(block)
+
+    # rectlist.insert(rect, index)
+
 def deleteRect(rect): #delete rectangle from pygame canvas
-    pass
+    left = rect.left
+    top = rect.top
+    width = rect.width  
+    height = rect.height
+    
+    rect = pygame.draw.rect(screen, background_colour, pygame.Rect(left, top, width, height))
 
 def swap_rectangles(rect1, rect2):
-    """just switch left,top,width,andheight for rects and draw them again
-       also switch order of rectangles in the list
     """
+        make the rects black
+        just switch left and top for rects and draw them again
+        also switch order of rectangles in the list
+    """
+    deleteRect(rect1)
+    deleteRect(rect2)
+
+    tmp_w = rect1.width
+    tmp_left = rect1.left
+
+    # rect1.width = rect2.width
+    rect1.left = rect2.left
+    # rect2.width = tmp_w
+    rect2.left = tmp_left
+
+    drawRect(rect1)
+    drawRect(rect2)
+
     rect1_index = rectlist.index(rect1)
     rect2_index = rectlist.index(rect2)
 
     rectlist.list[rect1_index] = rect2
     rectlist.list[rect2_index] = rect1
-
-    tmp = rect1
-    rect1 = rect2
-    rect2 = rect1
 
     
     
@@ -140,10 +178,14 @@ DEBUG
 rectlist = RectList()
 draw_rectangles(20)
 
-rect1 = rectlist.list[0]
-rect2 = rectlist.list[4]
+rect1 = rectlist[4]
+rect2 = rectlist[7]
+
+rect3 = rectlist[10]
+rect4 = rectlist[19]
 
 swap_rectangles(rect1, rect2)
+swap_rectangles(rect3, rect4)
 
 
 
