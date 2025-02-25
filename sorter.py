@@ -3,6 +3,7 @@ import pygame
 from pygame import mixer
 import os
 import copy
+import random
 
 """
 Solar System Shit
@@ -54,6 +55,7 @@ class Rect:
 class RectList:
     def __init__(self):
         self.list = []# full of rects
+
 
     def append(self, rect):
         self.list.append(rect)
@@ -160,11 +162,18 @@ def swap_rectangles(rect1, rect2):
     rectlist.list[rect1_index] = rect2
     rectlist.list[rect2_index] = rect1
 
-    
+def shuffle(rectlist):
+    #need to shuffle rectangles by randomly swapping them
+    length_ = len(rectlist.list)
+    for i in range(length_):
+        i = random.randint(1, length_)
+        j = random.randint(1, length_)
+        swap_rectangles(rectlist[i], rectlist[j])
+
     
 
     
-""""
+"""
 DEBUG
 
 
@@ -178,14 +187,7 @@ DEBUG
 rectlist = RectList()
 draw_rectangles(20)
 
-rect1 = rectlist[4]
-rect2 = rectlist[7]
-
-rect3 = rectlist[10]
-rect4 = rectlist[19]
-
-swap_rectangles(rect1, rect2)
-swap_rectangles(rect3, rect4)
+shuffle(rectlist)
 
 
 
