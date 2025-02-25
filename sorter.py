@@ -22,6 +22,8 @@ common app essay ai reviewer/tutor
 
 """
 
+clock = pygame.time.Clock()
+FPS=60
 
 song = os.path.join("sounds", "forward.mp3")
 
@@ -51,6 +53,7 @@ class Rect:
 
         self.rect = None
         self.outline = None
+        
 
 class RectList:
     def __init__(self):
@@ -65,6 +68,10 @@ class RectList:
         for block in self.list:
             print("rect " + str(index) + ": " + str(block.left) + " " + str(block.top) + " " + str(block.width) + " " + str(block.height))
             index += 1
+
+    def print_(self, rect):
+        index = self.index(rect)
+        print("rect " + str(index) + ": " + str(rect.left) + " " + str(rect.top) + " " + str(rect.width) + " " + str(rect.height))
 
     def index(self, obj):
         index = 0
@@ -84,6 +91,21 @@ class RectList:
 
     def __repr__(self):
         return f"RectList({self.list})"
+    
+    def shuffle(self):
+        #need to shuffle rectangles by randomly swapping them
+        length_ = len(self.list)
+        for _ in range(length_ * 2):
+            i = random.randint(0, length_-1)
+            j = random.randint(0, length_-1)
+            swap(self.list[i], self.list[j])
+    
+    def shuffle_once(self):
+        length_ = len(self.list)
+        i = random.randint(0, length_-1)
+        j = random.randint(0, length_-1)
+        swap(self.list[i], self.list[j])
+        pygame.display.flip()
 
         
 
@@ -109,8 +131,8 @@ def draw_rectangles(number):
 
         rectlist.append(block)
 
-    rectlist.print_list()
-    return rectlist
+    # rectlist.print_list()
+    pygame.display.update()
 
 def drawRect(rect):
     left = rect.left
@@ -136,7 +158,7 @@ def deleteRect(rect): #delete rectangle from pygame canvas
     
     rect = pygame.draw.rect(screen, background_colour, pygame.Rect(left, top, width, height))
 
-def swap_rectangles(rect1, rect2):
+def swap(rect1, rect2):
     """
         make the rects black
         just switch left and top for rects and draw them again
@@ -156,19 +178,8 @@ def swap_rectangles(rect1, rect2):
     drawRect(rect1)
     drawRect(rect2)
 
-    rect1_index = rectlist.index(rect1)
-    rect2_index = rectlist.index(rect2)
 
-    rectlist.list[rect1_index] = rect2
-    rectlist.list[rect2_index] = rect1
 
-def shuffle(rectlist):
-    #need to shuffle rectangles by randomly swapping them
-    length_ = len(rectlist.list)
-    for i in range(length_):
-        i = random.randint(1, length_)
-        j = random.randint(1, length_)
-        swap_rectangles(rectlist[i], rectlist[j])
 
     
 
@@ -187,24 +198,45 @@ DEBUG
 rectlist = RectList()
 draw_rectangles(20)
 
-shuffle(rectlist)
+rect1 = rectlist[4]
+rectlist.print_(rect1)
+rect2 = rectlist[7]
+rectlist.print_(rect2)
+
+rect3 = rectlist[10]
+rect4 = rectlist[19]
+
+swap(rect1, rect2)
+rectlist.print_(rect1)
+rectlist.print_(rect2)
+swap(rect3, rect4)
+
+
+
+
 
 
 
 # Update the display using flip 
 pygame.display.flip() 
-  
+
 # Variable to keep our game loop running 
 running = True
-  
+
 # game loop 
 while running: 
-    
+    clock.tick(60)
+    rectlist.shuffle_once()
 # for loop through the event queue   
     for event in pygame.event.get(): 
-      
+    
         # Check for QUIT event       
         if event.type == pygame.QUIT: 
             running = False
+
+        
+        
+pygame.quit()
+
 
 
