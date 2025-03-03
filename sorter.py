@@ -2,8 +2,8 @@
 import pygame
 from pygame import mixer
 import os
-import copy
 import random
+import copy
 
 """
 Solar System Shit
@@ -21,9 +21,9 @@ ai nerf gun dececting shoot / sentry unit type sht
 common app essay ai reviewer/tutor 
 
 """
-
+pygame.init()
 clock = pygame.time.Clock()
-FPS=60
+
 
 song = os.path.join("sounds", "forward.mp3")
 
@@ -35,7 +35,7 @@ mixer.music.play(-1, 1.0)
 background_colour = (0,0,0) 
 rectangle_color = (255,0,0) # red baby
   
-screen = pygame.display.set_mode((800, 400)) 
+screen = pygame.display.set_mode((800, 600)) 
   
 
 pygame.display.set_caption('sort_algo') 
@@ -99,12 +99,15 @@ class RectList:
             i = random.randint(0, length_-1)
             j = random.randint(0, length_-1)
             swap(self.list[i], self.list[j])
+        pygame.display.flip()
     
     def shuffle_once(self):
-        length_ = len(self.list)
+        length_ = int(len(self.list))
         i = random.randint(0, length_-1)
         j = random.randint(0, length_-1)
-        swap(self.list[i], self.list[j])
+        print(i, j)
+        if i != j:
+            swap(self.list[i], self.list[j])
         pygame.display.flip()
 
         
@@ -122,8 +125,8 @@ def draw_rectangles(number):
         # if i == 0: #first block
         #     top -= 5
     
-        # rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
-        rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width, height))
+        rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
+        rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width-.5, height-.5))
 
         block = Rect(left, top, width, height)
         block.rect = rect
@@ -132,6 +135,7 @@ def draw_rectangles(number):
         rectlist.append(block)
 
     # rectlist.print_list()
+    print(rectlist)
     pygame.display.update()
 
 def drawRect(rect):
@@ -139,14 +143,14 @@ def drawRect(rect):
     top = rect.top
     width = rect.width  
     height = rect.height
-    # rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
-    rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width, height))
+    rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
+    rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width-.5, height-.5))
 
     block = Rect(left, top, width, height)
     block.rect = rect
     # block.outline = rect_outline
 
-    rectlist.append(block)
+  
 
     # rectlist.insert(rect, index)
 
@@ -155,31 +159,53 @@ def deleteRect(rect): #delete rectangle from pygame canvas
     top = rect.top
     width = rect.width  
     height = rect.height
-    
-    rect = pygame.draw.rect(screen, background_colour, pygame.Rect(left, top, width, height))
+    # rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
+
+    rect = pygame.draw.rect(screen, background_colour, pygame.Rect(left, top, width-.5, height-.5))
+    # rectlist.list.remove(rect)
+    # pygame.time.delay(50)
+    pygame.display.update()
 
 def swap(rect1, rect2):
     """
-        make the rects black
-        just switch left and top for rects and draw them again
-        also switch order of rectangles in the list
+    Swap two rectangles by updating their positions
+    and redrawing them properly
     """
+    if rect1 == rect2:
+        return
+    if rect1.left == rect2.left:
+        return
+
+    # Store original positions
+    rect1_left = rect1.left
+    rect2_left = rect2.left
+    
+    # Clear both rectangles first
     deleteRect(rect1)
     deleteRect(rect2)
-
-    tmp_w = rect1.width
-    tmp_left = rect1.left
-
-    # rect1.width = rect2.width
-    rect1.left = rect2.left
-    # rect2.width = tmp_w
-    rect2.left = tmp_left
-
+    pygame.display.update()  # Update display after deletions
+    
+    # Update positions
+    rect1.left, rect2.left = rect2_left, rect1_left
+    
+    # Update rectangle objects
+   
+    
+    # Draw the rectangles in their new positions
     drawRect(rect1)
     drawRect(rect2)
+    # pygame.display.update()  # Update display after drawing
+    
+    # Update the positions in the list if needed
+    rect1_index = rectlist.index(rect1)
+    rect2_index = rectlist.index(rect2)
+    rectlist.list[rect1_index], rectlist.list[rect2_index] = rect2, rect1
+    # pygame.time.delay(1000)
+    pygame.display.update()
 
 
-
+   
+    
 
     
 
@@ -196,20 +222,28 @@ and need to implement sort still
 DEBUG
 """
 rectlist = RectList()
-draw_rectangles(20)
+draw_rectangles(40)
+
+# rect1 = rectlist[0]
+# rectlist.print_(rect1)
+# rect2 = rectlist[18]
+# rectlist.print_(rect2)
+
+# rect3 = rectlist[10]
+# rect4 = rectlist[19]
+
+
+# rectlist.print_(rect1)
+# rectlist.print_(rect2)
+# swap(rect1, rect2)
 
 rect1 = rectlist[4]
-rectlist.print_(rect1)
-rect2 = rectlist[7]
-rectlist.print_(rect2)
-
-rect3 = rectlist[10]
-rect4 = rectlist[19]
+rect2 = rectlist[5]
 
 swap(rect1, rect2)
-rectlist.print_(rect1)
-rectlist.print_(rect2)
-swap(rect3, rect4)
+
+swap(rect1, rect2)
+
 
 
 
@@ -223,12 +257,19 @@ pygame.display.flip()
 # Variable to keep our game loop running 
 running = True
 
+FPS=60
 # game loop 
 while running: 
-    clock.tick(60)
+    clock.tick(FPS)
     rectlist.shuffle_once()
+    
+    # swap(rect1, rect2)
+    # swap(rect1, rect2)
 # for loop through the event queue   
     for event in pygame.event.get(): 
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                    running = False
     
         # Check for QUIT event       
         if event.type == pygame.QUIT: 
