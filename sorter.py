@@ -37,7 +37,7 @@ mixer.music.play(-1, 1.0)
 background_colour = (0,0,0) 
 rectangle_color = (255,255,255) # red baby
   
-screen = pygame.display.set_mode((600, 600)) 
+screen = pygame.display.set_mode((1200, 800)) 
   
 
 pygame.display.set_caption('sort_algo') 
@@ -116,13 +116,20 @@ class RectList:
             swap(self.list[i], self.list[j])
         pygame.display.flip()
 
-        
+def my_range(start, end, increment):
+    current_value = start
+    values = []
+    while current_value < end:
+        values.append(current_value)
+        current_value += increment
+    
+    return values
 
 def draw_rectangles(number): 
     divider = int(screen.get_width() / number)
     dividerh = int(screen.get_height() / number)
     # print(screen.get_width(), divider)
-    for i in range(0,800,divider): #increment by divider
+    for i in range(0,screen.get_width(),divider): #increment by divider
         left = 0 + i
         top = screen.get_height()-(dividerh*(i / divider))
         width = screen.get_width()/number
@@ -207,7 +214,7 @@ def swap(rect1, rect2):
     rect1_index = rectlist.index(rect1)
     rect2_index = rectlist.index(rect2)
     rectlist[rect1_index], rectlist[rect2_index] = rect2, rect1
-    # pygame.time.delay(1000)
+    # pygame.time.delay(50)
     pygame.display.update()
 
 
@@ -296,8 +303,11 @@ def merge_sort_(rectlist, left, right):
         mid = (left + right) // 2
 
         merge_sort_(rectlist, left, mid)
+        print("merging left side!")
         merge_sort_(rectlist, mid + 1, right)
+        print("merging right side!")
         merge(rectlist, left, mid, right)
+        print("merging final 2 sides!")
 
 def merge_sort(rectlist):
     merge_sort_(rectlist, 0, len(rectlist)-1)
@@ -318,7 +328,7 @@ def current_block():
     
 surface = pygame.display.get_surface()
 
-num_of_rects = 200
+num_of_rects =600
 
 rectlist = RectList()
 draw_rectangles(num_of_rects)
@@ -332,23 +342,20 @@ running = True
 
 FPS=60
 # game loop 
-rectlist.shuffle()
-
-sorts = [insertion_sort, bubble_sort, selection_sort, merge_sort]
 while running: 
-    
-    clock.tick(FPS)
-    sorts[3](rectlist)
-    
-    # if sort_complete == True:
-    #     animate()
-    # selection_sort(rectlist)
-    # bubble_sort(rectlist)
-    
-    
-    # swap(rect1, rect2)
-    # swap(rect1, rect2)
-# for loop through the event queue   
+    # for event in pygame.event.get():
+    #     if event.type == pygame.QUIT:
+    #         running = False
+    #     elif event.type == pygame.KEYDOWN:
+    #         if event.key == pygame.K_ESCAPE:
+    #             running = False
+    #         elif event.key == pygame.K_s:  # Press 'S' to shuffle
+    #             rectlist.shuffle()
+    #         elif event.key == pygame.K_b:  # Press 'B' to run bubble sort
+    #             bubble_sort(rectlist)
+    #         elif event.key == pygame.K_i:  # Press 'I' to run insertion sort
+    #             insertion_sort(rectlist)
+
     for event in pygame.event.get(): 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -357,6 +364,17 @@ while running:
         # Check for QUIT event       
         if event.type == pygame.QUIT: 
             running = False
+    rectlist.shuffle()
+
+    sorts = [insertion_sort, bubble_sort, selection_sort, merge_sort]
+    fast_sorts = [selection_sort, merge_sort]
+    
+    sort_function = random.choice(fast_sorts)
+    sort_function(rectlist)
+
+    # sorts[3](rectlist)
+
+    
 
         
         
