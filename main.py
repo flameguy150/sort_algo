@@ -1,21 +1,21 @@
 # import openai
 import pygame
 from pygame import mixer
+import sys
 import os
 import random
 import copy
 from utils.algorithms import selection_sort, bubble_sort, merge_sort, insertion_sort
-from utils.utilities import Rect, RectList, display_text, display_text_xy, autoplay, check_completion, animate
+from utils.utilities import Rect, RectList, display_text, display_text_xy, autoplay, check_completion, animate, resource_path
 import time
-    
-
-# bubbling = False
 
 pygame.init()
 clock = pygame.time.Clock()
 
 
-song = os.path.join("sounds", "forward.mp3")
+# song = os.path.join("sounds", "forward.mp3")
+song = resource_path(os.path.join("sounds", "forward.mp3"))
+mixer.music.load(song)
 
 mixer.init() 
 mixer.music.load(song) 

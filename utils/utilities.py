@@ -1,5 +1,7 @@
 import pygame
 import random
+import os
+import sys
 from utils.algorithms import merge_sort, selection_sort, insertion_sort, bubble_sort
 
 background_colour = (0,0,0) 
@@ -100,7 +102,7 @@ class RectList:
 
         for i in range(number):
             left = i * divider
-            height = (i + 1) * dividerh  # or random heights if you want later
+            height = (i) * dividerh  
             top = screen.get_height() - height
             width = divider
 
@@ -239,3 +241,11 @@ def autoplay(rectlist):
     i = random.randint(0,3)
     return sorts[i](rectlist)
 
+'''for music'''
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
