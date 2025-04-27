@@ -9,6 +9,9 @@ M: MergeSort
 B: BubbleSort
 I: InsertionSort
 S: SelectionSort
+A: AutoSort
+↑: Increase FPS
+↓: Decrease FPS
 ```
 
 
@@ -20,15 +23,27 @@ git clone https://github.com/yourusername/sort_algo.git
 cd sort_algo
 ```
 
-2. Install pygame
+2. Create and activate a virtual environment
 ```bash
-pip install pygame
+py -m venv .venv
+
+(PowerShell)
+.\.venv\Scripts\Activate.ps1
+
+(Mac/Linux)
+source .venv/bin/activate
 ```
 
-3. Run file
+3. Install dependencies:
+
 ```bash
-windows: py sorter.py
-mac: python3 sorter.py
+pip install -r requirements.txt
+
+```
+4. Run file
+```bash
+windows: py main.py
+mac: python3 main.py
 ```
 
 ---
