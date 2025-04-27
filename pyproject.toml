@@ -1,0 +1,15 @@
+[project]
+name = "sort_algo"
+version = "0.9.0"
+description = "A Python project that implements and visualizes sorting algorithms"
+authors = [
+  { name="Justin Lee", email="flameguy150@gmail.com" }
+]
+
+dependencies = [
+  "pygame",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

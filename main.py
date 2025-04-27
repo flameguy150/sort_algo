@@ -4,10 +4,10 @@ from pygame import mixer
 import os
 import random
 import copy
-from algorithms import selection_sort, bubble_sort, merge_sort, insertion_sort
-from utilities import Rect, RectList, display_text, display_text_xy, autoplay, check_completion, animate
+from utils.algorithms import selection_sort, bubble_sort, merge_sort, insertion_sort
+from utils.utilities import Rect, RectList, display_text, display_text_xy, autoplay, check_completion, animate
 import time
-
+    
 
 # bubbling = False
 
@@ -25,7 +25,7 @@ mixer.music.play(-1, 1.0)
 background_colour = (0,0,0) 
 rectangle_color = (255,255,255) # red baby
   
-screen = pygame.display.set_mode((600, 600)) 
+screen = pygame.display.set_mode((800, 600)) 
 pygame.font.init()
   
 
@@ -55,11 +55,7 @@ pygame.display.flip()
 # Variable to keep our game loop running 
 running = True
 
-
-
 sort_generator = None
-
-
 
 FPS=60
 # game loop 
@@ -130,10 +126,7 @@ while running:
                     FPS -= 60 
                 print(FPS)
     
-# print("--- %s seconds ---" % (time.time() - start_time))
-    
-
-        
+# print("--- %s seconds ---" % (time.time() - start_time)) 
         
 pygame.quit()
 
@@ -143,5 +136,10 @@ then, loop into another sort
 
 show fps and other cool stuff on top part of screen
 cool little expand animation for it?
+
+py -m venv .venv
+
+# 3. Activate (PowerShell)
+.\.venv\Scripts\Activate.ps1
 
 """

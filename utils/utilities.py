@@ -1,16 +1,9 @@
 import pygame
 import random
-from algorithms import merge_sort, selection_sort, insertion_sort, bubble_sort
-
-
+from utils.algorithms import merge_sort, selection_sort, insertion_sort, bubble_sort
 
 background_colour = (0,0,0) 
 rectangle_color = (255,255,255) # red baby
-
-merging = False
-
-
-
 
 class Rect:
     def __init__(self, screen, left, top, width, height):
@@ -210,11 +203,6 @@ def check_completion(rectlist): #check to see if sorted to play animate
         if rectlist[i].height > rectlist[i+1].height: #if this doesn't work, check for height
             return False
     return True
-
-def current_block():
-    pass #highlight current block
-
-
 
 
 

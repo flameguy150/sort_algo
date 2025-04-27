@@ -2,8 +2,6 @@ import pygame
 import random
 
 
-
-
 def all_sorts():
     pass
 def selection_sort(rectlist):
@@ -116,5 +114,3 @@ def merge_sort_(rectlist, left, right):
 
 def merge_sort(rectlist):
     yield from merge_sort_(rectlist, 0, len(rectlist)-1)
-
-
