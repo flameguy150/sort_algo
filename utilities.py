@@ -1,7 +1,7 @@
 import pygame
 import random
+from algorithms import merge_sort, selection_sort, insertion_sort, bubble_sort
 
-screen = pygame.display.set_mode((1200, 800)) 
 
 
 background_colour = (0,0,0) 
@@ -10,22 +10,29 @@ rectangle_color = (255,255,255) # red baby
 merging = False
 
 
+
+
 class Rect:
-    def __init__(self, left, top, width, height):
+    def __init__(self, screen, left, top, width, height):
         self.left = left
         self.top = top
         self.width = width
         self.height = height
+        self.screen = screen
 
         self.rect = None
         self.outline = None
         
 
 class RectList:
-    def __init__(self):
-        self.list = []# full of rects
+    def __init__(self, screen):
+        self.list = [] # full of rects
+        self.screen = screen
 
         self.shuffling = False
+        self.highlight = (-1,-1)
+        self.number = 0 #number of rectangles
+        
 
     def __getitem__(self, index):
         return self.list[index]  # Allow indexing like a regular list
@@ -41,6 +48,9 @@ class RectList:
 
     def append(self, rect):
         self.list.append(rect)
+
+
+
     
     def print_list(self):
         index = 0
@@ -74,6 +84,7 @@ class RectList:
             j = random.randint(0, length_-1)
             self.swap(self.list[i], self.list[j])
             # self.shuffle_once()
+            self.draw_rectangles()
         pygame.display.flip()
     
     def shuffle_once(self):
@@ -86,27 +97,63 @@ class RectList:
                 self.swap(self.list[i], self.list[j])
             pygame.display.flip()
 
-    def draw_rectangles(self, number): 
-        divider = int(screen.get_width() / number)
-        dividerh = int(screen.get_height() / number)
-        # print(screen.get_width(), divider)
-        for i in range(0,screen.get_width(),divider): #increment by divider
-            left = 0 + i
-            top = screen.get_height()-(dividerh*(i / divider))
-            width = screen.get_width()/number
-            height = screen.get_height()-top
 
-            rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
-            rect = pygame.draw.rect(screen, rectangle_color, pygame.Rect(left, top, width-.5, height-.5))
+    def create_rectangles(self, number):
+        self.number = number
+        self.list.clear()  # clear existing rectangles
+        screen = self.screen
+        divider = screen.get_width() / number
+        dividerh = screen.get_height() / number
 
-            block = Rect(left, top, width, height)
-            block.rect = rect
-            # block.outline = rect_outline
+        for i in range(number):
+            left = i * divider
+            height = (i + 1) * dividerh  # or random heights if you want later
+            top = screen.get_height() - height
+            width = divider
 
+            block = Rect(screen, left, top, width, height)
             self.append(block)
+        
+    def reset_rectangles(self):
+        self.list = []
+        self.create_rectangles(self.number)
+        self.draw_rectangles()
 
-        # rectlist.print_list()
-        # print(rectlist)
+    def draw_rectangles(self): 
+        screen = self.screen
+        screen.fill(background_colour)  # clears whole screen
+
+        for idx, rect in enumerate(self.list):
+            # black border
+            outline_rect = pygame.Rect(rect.left - 0.5, rect.top - 0.5, rect.width + 0.5, rect.height + 1)
+            pygame.draw.rect(screen, (0, 0, 0), outline_rect)
+
+            # highlighting
+            if idx == self.highlight[0] or idx == self.highlight[1]:
+                color = (255, 0, 0)  #red for highlighted rectangles
+            else:
+                color = (255, 255, 255)  # qhite for normal rectangles
+
+            main_rect = pygame.Rect(rect.left, rect.top, rect.width - 0.5, rect.height - 0.5)
+            pygame.draw.rect(screen, color, main_rect)
+
+        pygame.display.update()
+
+    def draw_end(self):
+        screen = self.screen
+        for rect in (self.list):
+            # black border
+            outline_rect = pygame.Rect(rect.left - 0.5, rect.top - 0.5, rect.width + 0.5, rect.height + 1)
+            pygame.draw.rect(screen, (0, 0, 0), outline_rect)
+
+            # highlighting
+            color = (255, 0, 0)
+
+            main_rect = pygame.Rect(rect.left, rect.top, rect.width - 0.5, rect.height - 0.5)
+            pygame.draw.rect(screen, color, main_rect)
+            pygame.display.update()
+            pygame.time.delay(5)
+
         pygame.display.update()
 
     def swap(self, rect1, rect2):
@@ -123,10 +170,6 @@ class RectList:
         rect1_left = rect1.left
         rect2_left = rect2.left
 
-        # Clear both rectangles first
-        deleteRect(rect1)
-        deleteRect(rect2)
-        pygame.display.update()  # Update display after deletions
 
         # Update positions
         rect1.left, rect2.left = rect2_left, rect1_left
@@ -135,8 +178,8 @@ class RectList:
     
 
         # Draw the rectangles in their new positions
-        drawRect(rect1)
-        drawRect(rect2)
+        # drawRect(rect1)
+        # drawRect(rect2)
         # pygame.display.update()  # Update display after drawing
 
         # Update the positions in the list if needed
@@ -157,59 +200,54 @@ def my_range(start, end, increment):
 
 
 
-def drawRect(rect, color_=None):
-    color = (255,255,255)
-    if color_ == 'red':
-        color = (255,0,0)
-    
-    left = rect.left
-    top = rect.top
-    width = rect.width  
-    height = rect.height
-    rect_outline = pygame.draw.rect(screen, background_colour, pygame.Rect(left-.5, top - .5, width + .5, height+1))
-    rect = pygame.draw.rect(screen, color, pygame.Rect(left, top, width-.5, height-.5))
-
-    block = Rect(left, top, width, height)
-    block.rect = rect
-    # block.outline = rect_outline
-
-  
-
-    # rectlist.insert(rect, index)
-
-def deleteRect(rect): #delete rectangle from pygame canvas
-    left = rect.left
-    top = rect.top
-    width = rect.width  
-    height = rect.height
-    # rect_outline = pygame.draw.rect(screen, (0,0,0), pygame.Rect(left-.5, top - .5, width + .5, height+1))
-
-    rect = pygame.draw.rect(screen, background_colour, pygame.Rect(left, top, width-.5, height-.5))
-    # rectlist.remove(rect)
-    # pygame.time.delay(50)
-    pygame.display.update()
 
 
 def animate(rectlist):
-    for rect in rectlist:
-        drawRect(rect, 'red')
+    rectlist.draw_end()
 
-def check_completion(): #check to see if sorted to play animate
-    pass 
+def check_completion(rectlist): #check to see if sorted to play animate
+    for i in range(len(rectlist)-1):
+        if rectlist[i].height > rectlist[i+1].height: #if this doesn't work, check for height
+            return False
+    return True
 
 def current_block():
     pass #highlight current block
 
-def merging_():
-    global merging_
-    merging = not merging
+
 
 
 
 def display_text(message, textcolour, bgcolour, screen):
-    font = pygame.font.Font('freesansbold.ttf', 32)
+    # erase_text(textcolour, bgcolour, screen)
+    font = pygame.font.Font('freesansbold.ttf', 20)
     text = font.render(message, True, textcolour, bgcolour)
     textRect = text.get_rect()
-    textRect.center = (40, 40)
+    textRect.center = (100, 40)
     screen.blit(text, textRect)
     return message
+
+def erase_text(textcolour, bgcolour, screen):
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    text = font.render(" ", True, textcolour, bgcolour)
+    textRect = text.get_rect()
+    textRect.center = (110, 40)
+    screen.blit(text, textRect)
+    return " "
+
+def display_text_xy(message, textcolour, bgcolour, screen, x, y):
+    # erase_text(textcolour, bgcolour, screen)
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    text = font.render(message, True, textcolour, bgcolour)
+    textRect = text.get_rect()
+    textRect.center = (x, y)
+    screen.blit(text, textRect)
+    return message
+
+
+def autoplay(rectlist):
+    rectlist.shuffle()
+    sorts = [insertion_sort, bubble_sort, selection_sort, merge_sort]
+    i = random.randint(0,3)
+    return sorts[i](rectlist)
+
