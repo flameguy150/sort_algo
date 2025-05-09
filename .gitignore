@@ -13,13 +13,3 @@ __pycache__/
 Thumbs.db
 
 build/
-dist/
-*.spec
-*.exe
-*.dll
-*.pyd
-*.zip
-*.mp3
-*.bmp
-*.ttf
-*.log
