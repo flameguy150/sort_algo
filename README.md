@@ -14,8 +14,18 @@ A: AutoSort
 ↓: Decrease FPS
 ```
 
+## Run using precompiled executable
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/sort_algo.git
+cd sort_algo
+```
+2. Go into the ```dist/``` folder and click on sorter.exe!
+```
+sorter.exe
+```
 
-## How to run
+## Run locally from Source (Python)
 
 1. Clone the repository
 ```bash
