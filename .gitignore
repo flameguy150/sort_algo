@@ -11,3 +11,15 @@ __pycache__/
 # Ignore OS files
 .DS_Store
 Thumbs.db
+
+build/
+dist/
+*.spec
+*.exe
+*.dll
+*.pyd
+*.zip
+*.mp3
+*.bmp
+*.ttf
+*.log
