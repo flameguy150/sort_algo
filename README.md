@@ -29,7 +29,7 @@ sorter.exe
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/sort_algo.git
+git clone https://github.com/flameguy150/sort_algo.git
 cd sort_algo
 ```
 
